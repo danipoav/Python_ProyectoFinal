@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Registro{% endblock %}
+{% block content %}
+<h2>Registro</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.nombre.label }} {{ form.nombre() }}<br>
+    {{ form.email.label }} {{ form.email() }}<br>
+    {{ form.password.label }} {{ form.password() }}<br>
+    {{ form.confirmar_password.label }} {{ form.confirmar_password() }}<br>
+    {{ form.rol.label }} {{ form.rol() }}<br>
+    {{ form.submit() }}
+</form>
+{% endblock %}
