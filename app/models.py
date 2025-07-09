@@ -11,7 +11,7 @@ class Usuario(UserMixin, db.Model):
     nombre = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
-    rol = db.Column(db.String(50), nullable=False, default='cliente')  # 'admin' o 'cliente'
+    rol = db.Column(db.String(50), nullable=False, default='cliente')
 
     def __repr__(self):
         return f'<Usuario {self.nombre}>'
