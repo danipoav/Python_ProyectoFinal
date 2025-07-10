@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Listado{% endblock %}
+{% block content %}
+<h1>Listado de productos</h1>
+<a href="{{ url_for('main.crear_producto') }}">➕ Nuevo producto</a>
+<ul>
+  {% for producto in productos %}
+    <li>
+      {{ producto.nombre }} - {{ producto.cantidad }} unidades
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
