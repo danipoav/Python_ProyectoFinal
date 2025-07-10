@@ -22,6 +22,7 @@ class Producto(db.Model):
     nombre = db.Column(db.String(150), nullable=False)
     descripcion = db.Column(db.Text)
     cantidad = db.Column(db.Integer, nullable=False)
+    stock_maximo = db.Column(db.Integer, nullable=False, default=100) 
     precio = db.Column(db.Float, nullable=False)
     ubicacion = db.Column(db.String(100))
     referencia = db.Column(db.String(100))

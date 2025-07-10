@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, current_user, login_required
 from . import db, bcrypt
 from .models import Usuario,Producto,Proveedor
-from .forms import RegistroForm, LoginForm,ProductoForm
+from .forms import RegistroForm, LoginForm, ProductoForm, ProveedorForm
 from flask import Blueprint
 from . import login_manager
 from .models import Usuario
@@ -65,11 +65,16 @@ def logout():
     flash('🔒 Has cerrado sesión correctamente.', 'info')
     return redirect(url_for('main.login'))
 
+
+# Productos
 @main.route('/productos')
 @login_required
 def listar_productos():
     productos = Producto.query.all()
-    return render_template('productos/listar.html', productos=productos)
+    productos_stock_bajo = [
+        p for p in productos if p.cantidad <= (p.stock_maximo * 0.1)
+    ]
+    return render_template('productos/listar.html', productos=productos, productos_stock_bajo=productos_stock_bajo)
 
 
 @main.route('/producto/nuevo', methods=['GET', 'POST'])
@@ -98,3 +103,101 @@ def crear_producto():
         return redirect(url_for('main.listar_productos'))
     
     return render_template('productos/formulario.html', form=form, titulo='Nuevo Producto')
+
+@main.route('/producto/editar/<int:id>', methods=['GET', 'POST'])
+@login_required
+def editar_producto(id):
+    producto = Producto.query.get_or_404(id)
+    form = ProductoForm(obj=producto)
+    form.proveedores.choices = [(p.id, p.nombre_empresa) for p in Proveedor.query.all()]
+    form.proveedores.data = [p.id for p in producto.proveedores]
+
+    if form.validate_on_submit():
+        producto.nombre = form.nombre.data
+        producto.descripcion = form.descripcion.data
+        producto.cantidad = form.cantidad.data
+        producto.precio = form.precio.data
+        producto.ubicacion = form.ubicacion.data
+        producto.referencia = form.referencia.data
+        producto.color = form.color.data
+        producto.proveedores = Proveedor.query.filter(Proveedor.id.in_(form.proveedores.data)).all()
+
+        db.session.commit()
+        flash('Producto actualizado correctamente.', 'success')
+        return redirect(url_for('main.listar_productos'))
+
+    return render_template('productos/formulario.html', form=form, titulo='Editar Producto')
+
+
+@main.route('/producto/eliminar/<int:id>', methods=['POST'])
+@login_required
+def eliminar_producto(id):
+    producto = Producto.query.get_or_404(id)
+    db.session.delete(producto)
+    db.session.commit()
+    flash('Producto eliminado correctamente.', 'success')
+    return redirect(url_for('main.listar_productos'))
+
+
+
+# Proveedores
+@main.route('/proveedores')
+@login_required
+def listar_proveedores():
+    proveedores = Proveedor.query.all()
+    return render_template('proveedores/listar.html', proveedores=proveedores)
+
+@main.route('/proveedor/nuevo', methods=['GET', 'POST'])
+@login_required
+def crear_proveedor():
+    form = ProveedorForm()
+    if form.validate_on_submit():
+        proveedor = Proveedor(
+            nombre_empresa=form.nombre_empresa.data,
+            cif=form.cif.data,
+            telefono=form.telefono.data,
+            direccion=form.direccion.data,
+            email=form.email.data,
+            descuento=form.descuento.data,
+            iva=form.iva.data,
+            precio_base=form.precio_base.data
+        )
+        db.session.add(proveedor)
+        db.session.commit()
+        flash('Proveedor creado correctamente.', 'success')
+        return redirect(url_for('main.listar_proveedores'))
+    
+    return render_template('proveedores/formulario.html', form=form, titulo='Nuevo Proveedor')
+
+@main.route('/proveedor/editar/<int:id>', methods=['GET', 'POST'])
+@login_required
+def editar_proveedor(id):
+    proveedor = Proveedor.query.get_or_404(id)
+    form = ProveedorForm(obj=proveedor)
+
+    if form.validate_on_submit():
+        proveedor.nombre_empresa = form.nombre_empresa.data
+        proveedor.cif = form.cif.data
+        proveedor.telefono = form.telefono.data
+        proveedor.direccion = form.direccion.data
+        proveedor.email = form.email.data
+        proveedor.descuento = form.descuento.data
+        proveedor.iva = form.iva.data
+        proveedor.precio_base = form.precio_base.data
+
+        db.session.commit()
+        flash('Proveedor actualizado correctamente.', 'success')
+        return redirect(url_for('main.listar_proveedores'))
+
+    return render_template('proveedores/formulario.html', form=form, titulo='Editar Proveedor')
+
+
+@main.route('/proveedor/eliminar/<int:id>', methods=['POST'])
+@login_required
+def eliminar_proveedor(id):
+    proveedor = Proveedor.query.get_or_404(id)
+    db.session.delete(proveedor)
+    db.session.commit()
+    flash('Proveedor eliminado correctamente.', 'success')
+    return redirect(url_for('main.listar_proveedores'))
+

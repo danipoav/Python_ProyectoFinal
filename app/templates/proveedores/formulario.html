@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Formulario Proveedores{% endblock %}
+{% block content %}
+<h1>{{ titulo }}</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.nombre_empresa.label }} {{ form.nombre_empresa() }}<br>
+    {{ form.cif.label }} {{ form.cif() }}<br>
+    {{ form.telefono.label }} {{ form.telefono() }}<br>
+    {{ form.direccion.label }} {{ form.direccion() }}<br>
+    {{ form.email.label }} {{ form.email() }}<br>
+    {{ form.descuento.label }} {{ form.descuento() }}<br>
+    {{ form.iva.label }} {{ form.iva() }}<br>
+    {{ form.precio_base.label }} {{ form.precio_base() }}<br>
+    {{ form.submit() }}
+</form>
+{% endblock %}

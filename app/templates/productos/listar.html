@@ -1,13 +1,30 @@
 {% extends 'base.html' %}
-{% block title %}Listado{% endblock %}
+{% block title %}Productos{% endblock %}
 {% block content %}
-<h1>Listado de productos</h1>
+<h1>Productos</h1>
 <a href="{{ url_for('main.crear_producto') }}">➕ Nuevo producto</a>
+
+{% if productos_stock_bajo %}
+  <div style="color:red;">
+    <h3>⚠️ Productos con stock bajo</h3>
+    <ul>
+      {% for p in productos_stock_bajo %}
+        <li>{{ p.nombre }} – Stock: {{ p.cantidad }} / Máximo: {{ p.stock_maximo }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
 <ul>
-  {% for producto in productos %}
+  {% for p in productos %}
     <li>
-      {{ producto.nombre }} - {{ producto.cantidad }} unidades
+      {{ p.nombre }} – {{ p.referencia }} – Stock: {{ p.cantidad }}
+      | <a href="{{ url_for('main.editar_producto', id=p.id) }}">✏️ Editar</a>
+      | <form method="POST" action="{{ url_for('main.eliminar_producto', id=p.id) }}" style="display:inline;">
+          <button type="submit" onclick="return confirm('¿Eliminar este producto?');">🗑️ Eliminar</button>
+        </form>
     </li>
   {% endfor %}
 </ul>
+
 {% endblock %}

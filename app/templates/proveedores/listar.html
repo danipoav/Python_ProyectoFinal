@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Proveedores{% endblock %}
+{% block content %}
+<h1>Proveedores</h1>
+<a href="{{ url_for('main.crear_proveedor') }}">➕ Nuevo proveedor</a>
+
+<ul>
+  {% for p in proveedores %}
+    <li>
+      {{ p.nombre_empresa }} - {{ p.cif }}
+      | <a href="{{ url_for('main.editar_proveedor', id=p.id) }}">✏️ Editar</a>
+      | <form method="POST" action="{{ url_for('main.eliminar_proveedor', id=p.id) }}" style="display:inline;">
+          <button type="submit" onclick="return confirm('¿Seguro que quieres eliminar este proveedor?');">🗑️ Eliminar</button>
+        </form>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
