@@ -1,17 +1,56 @@
 {% extends 'base.html' %}
 {% block title %}Formulario Proveedores{% endblock %}
+
 {% block content %}
-<h1>{{ titulo }}</h1>
-<form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.nombre_empresa.label }} {{ form.nombre_empresa() }}<br>
-    {{ form.cif.label }} {{ form.cif() }}<br>
-    {{ form.telefono.label }} {{ form.telefono() }}<br>
-    {{ form.direccion.label }} {{ form.direccion() }}<br>
-    {{ form.email.label }} {{ form.email() }}<br>
-    {{ form.descuento.label }} {{ form.descuento() }}<br>
-    {{ form.iva.label }} {{ form.iva() }}<br>
-    {{ form.precio_base.label }} {{ form.precio_base() }}<br>
-    {{ form.submit() }}
-</form>
+<div class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded shadow">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">{{ titulo }}</h1>
+
+    <form method="POST" class="space-y-4">
+        {{ form.hidden_tag() }}
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.nombre_empresa.label }}</label>
+            {{ form.nombre_empresa(class_='w-full mt-1 p-2 border border-gray-300 rounded') }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.cif.label }}</label>
+            {{ form.cif(class_='w-full mt-1 p-2 border border-gray-300 rounded') }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.telefono.label }}</label>
+            {{ form.telefono(class_='w-full mt-1 p-2 border border-gray-300 rounded') }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.direccion.label }}</label>
+            {{ form.direccion(class_='w-full mt-1 p-2 border border-gray-300 rounded') }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.email.label }}</label>
+            {{ form.email(class_='w-full mt-1 p-2 border border-gray-300 rounded') }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.descuento.label }}</label>
+            {{ form.descuento(class_='w-full mt-1 p-2 border border-gray-300 rounded') }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.iva.label }}</label>
+            {{ form.iva(class_='w-full mt-1 p-2 border border-gray-300 rounded') }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.precio_base.label }}</label>
+            {{ form.precio_base(class_='w-full mt-1 p-2 border border-gray-300 rounded') }}
+        </div>
+
+        <div>
+            {{ form.submit(class_='bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition') }}
+        </div>
+    </form>
+</div>
 {% endblock %}
