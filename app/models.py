@@ -1,5 +1,6 @@
 from . import db
 from flask_login import UserMixin
+from datetime import datetime,timezone
 
 producto_proveedor = db.Table('producto_proveedor',
     db.Column('producto_id', db.Integer, db.ForeignKey('producto.id')),
@@ -46,3 +47,18 @@ class Proveedor(db.Model):
 
     def __repr__(self):
         return f'<Proveedor {self.nombre_empresa}>'
+    
+class Venta(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    producto_id = db.Column(db.Integer, db.ForeignKey('producto.id'), nullable=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+    cantidad = db.Column(db.Integer, nullable=False)
+    fecha = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    precio_total = db.Column(db.Float, nullable=False)
+
+    producto = db.relationship('Producto', backref='ventas')
+    usuario = db.relationship('Usuario', backref='ventas')
+
+    def __repr__(self):
+        return f'<Venta {self.producto.nombre} x {self.cantidad} - {self.fecha.strftime("%Y-%m-%d")}>'
+

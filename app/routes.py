@@ -1,8 +1,9 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, current_user, login_required
 from . import db, bcrypt
-from .models import Usuario,Producto,Proveedor
+from .models import Usuario,Producto,Proveedor,Venta
 from .forms import RegistroForm, LoginForm, ProductoForm, ProveedorForm
+from collections import defaultdict
 from flask import Blueprint
 from . import login_manager
 from .models import Usuario
@@ -201,3 +202,34 @@ def eliminar_proveedor(id):
     flash('Proveedor eliminado correctamente.', 'success')
     return redirect(url_for('main.listar_proveedores'))
 
+# GraficaAdmin
+@main.route('/estadisticas')
+@login_required
+def estadisticas():
+    ventas = Venta.query.all()
+
+    ventas_por_dia = {}
+    for venta in ventas:
+        fecha = venta.fecha.strftime('%Y-%m-%d')
+        ventas_por_dia[fecha] = ventas_por_dia.get(fecha, 0) + venta.precio_total
+
+    labels = list(ventas_por_dia.keys())
+    valores = list(ventas_por_dia.values())
+
+    return render_template('estadisticas.html', labels=labels, valores=valores)
+
+# GraficaComprasCliente
+@main.route('/mis-ventas')
+@login_required
+def mis_ventas():
+    ventas = Venta.query.filter_by(usuario_id=current_user.id).all()
+
+    ventas_por_fecha = defaultdict(float)
+    for v in ventas:
+        fecha_str = v.fecha.strftime('%Y-%m-%d')
+        ventas_por_fecha[fecha_str] += v.precio_total
+
+    labels = sorted(ventas_por_fecha.keys())
+    valores = [ventas_por_fecha[fecha] for fecha in labels]
+
+    return render_template('ventas.html', labels=labels, valores=valores)
