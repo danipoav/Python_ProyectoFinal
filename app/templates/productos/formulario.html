@@ -1,18 +1,61 @@
 {% extends 'base.html' %}
 {% block title %}Formulario Productos{% endblock %}
+
 {% block content %}
-<h1>{{ titulo }}</h1>
-<form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.nombre.label }} {{ form.nombre() }}<br>
-    {{ form.descripcion.label }} {{ form.descripcion() }}<br>
-    {{ form.cantidad.label }} {{ form.cantidad() }}<br>
-    {{ form.stock_maximo.label }} {{ form.stock_maximo() }}<br>
-    {{ form.precio.label }} {{ form.precio() }}<br>
-    {{ form.ubicacion.label }} {{ form.ubicacion() }}<br>
-    {{ form.referencia.label }} {{ form.referencia() }}<br>
-    {{ form.color.label }} {{ form.color() }}<br>
-    {{ form.proveedores.label }} {{ form.proveedores(multiple=True) }}<br>
-    {{ form.submit() }}
-</form>
+<div class="max-w-xl mx-auto mt-10 bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">{{ titulo }}</h1>
+
+    <form method="POST" class="space-y-4">
+        {{ form.hidden_tag() }}
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.nombre.label }}</label>
+            {{ form.nombre(class="w-full border border-gray-300 rounded px-3 py-2") }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.descripcion.label }}</label>
+            {{ form.descripcion(class="w-full border border-gray-300 rounded px-3 py-2") }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.cantidad.label }}</label>
+            {{ form.cantidad(class="w-full border border-gray-300 rounded px-3 py-2") }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.stock_maximo.label }}</label>
+            {{ form.stock_maximo(class="w-full border border-gray-300 rounded px-3 py-2") }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.precio.label }}</label>
+            {{ form.precio(class="w-full border border-gray-300 rounded px-3 py-2") }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.ubicacion.label }}</label>
+            {{ form.ubicacion(class="w-full border border-gray-300 rounded px-3 py-2") }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.referencia.label }}</label>
+            {{ form.referencia(class="w-full border border-gray-300 rounded px-3 py-2") }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.color.label }}</label>
+            {{ form.color(class="w-full border border-gray-300 rounded px-3 py-2") }}
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">{{ form.proveedores.label }}</label>
+            {{ form.proveedores(class="w-full border border-gray-300 rounded px-3 py-2", multiple=True) }}
+        </div>
+
+        <div>
+            {{ form.submit(class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700") }}
+        </div>
+    </form>
+</div>
 {% endblock %}
