@@ -72,6 +72,17 @@ def logout():
     return redirect(url_for('main.login'))
 
 
+#Catalogo de productos
+@main.route('/catalogo')
+@login_required
+def catalogo():
+    if current_user.rol != 'cliente':
+        flash('Acceso solo para clientes')
+        return redirect(url_for('main.home'))
+    
+    productos = Producto.query.all()
+    return render_template('catalogo.html',productos=productos)
+
 # Productos
 @main.route('/productos')
 @login_required
@@ -238,3 +249,4 @@ def mis_ventas():
     valores = [ventas_por_fecha[fecha] for fecha in labels]
 
     return render_template('ventas.html', labels=labels, valores=valores)
+
