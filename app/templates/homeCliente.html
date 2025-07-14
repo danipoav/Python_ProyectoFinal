@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Panel Cliente{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-2xl">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">
+        👋 Bienvenido, {{ current_user.nombre }}
+    </h1>
+    
+    <p class="text-gray-600 mb-6">
+        Este es tu panel personal. Desde aquí puedes consultar el catálogo de productos disponibles y realizar tus pedidos.
+    </p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <a href="{{ url_for('main.catalogo') }}" class="p-6 bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold rounded-xl transition">
+            🛒 Ver Catálogo de Productos
+        </a>
+
+        <a href="{{ url_for('main.logout') }}" class="p-6 bg-red-100 hover:bg-red-200 text-red-800 font-semibold rounded-xl transition">
+            🔒 Cerrar sesión
+        </a>
+    </div>
+
+    <!-- Más secciones opcionales -->
+    {# 
+    <div class="mt-8">
+        <h2 class="text-xl font-bold mb-2">Tus últimas compras</h2>
+        <ul class="list-disc ml-6 text-gray-700">
+            <li>Producto A - 2 uds - 12/06/2025</li>
+            <li>Producto B - 1 ud - 08/06/2025</li>
+        </ul>
+    </div>
+    #}
+</div>
+{% endblock %}

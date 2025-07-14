@@ -17,7 +17,12 @@ def load_user(user_id):
 
 @main.route('/')
 def home():
-    return render_template('home.html')
+    if current_user.is_authenticated:
+        if current_user.rol == 'admin':
+            return render_template('home.html')
+        else:
+            return render_template('homeCliente.html')
+    return render_template('bienvenida.html')
 
 
 @main.route('/register', methods=['GET', 'POST'])

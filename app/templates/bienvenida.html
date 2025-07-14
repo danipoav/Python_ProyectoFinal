@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Bienvenido{% endblock %}
+{% block content %}
+<section class="flex flex-col items-center justify-center min-h-[725px] bg-gradient-to-br from-blue-50 to-blue-100 text-gray-800 p-6">
+  <div class="text-center max-w-2xl">
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Bienvenido a <span class="text-blue-600">Suministros Informáticos</span></h1>
+    <p class="text-lg md:text-xl mb-6">Gestiona productos, proveedores y ventas de forma rápida y eficiente. Ideal para empresas de tecnología y logística.</p>
+    
+    <div class="space-x-4">
+      <a href="{{ url_for('main.login') }}" class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition">Iniciar sesión</a>
+      <a href="{{ url_for('main.register') }}" class="bg-white border border-blue-600 text-blue-600 px-6 py-3 rounded-xl hover:bg-blue-50 transition">Registrarse</a>
+    </div>
+  </div>
+
+  <div class="mt-10">
+    <img src="https://cdn.pixabay.com/photo/2017/08/30/07/52/technology-2698620_1280.jpg" alt="Suministros Informáticos" class="rounded-xl shadow-lg max-w-lg">
+  </div>
+</section>
+{% endblock %}
