@@ -16,13 +16,11 @@
             🛒 Ver Catálogo de Productos
         </a>
 
-        <a href="{{ url_for('main.logout') }}" class="p-6 bg-red-100 hover:bg-red-200 text-red-800 font-semibold rounded-xl transition">
-            🔒 Cerrar sesión
+        <a href="{{ url_for('main.estadisticas') }}" class="p-6 bg-green-100 hover:bg-green-200 text-green-800 font-semibold rounded-xl transition">
+            📈 Estadisticas
         </a>
     </div>
-
-    <!-- Más secciones opcionales -->
-    {# 
+    
     <div class="mt-8">
         <h2 class="text-xl font-bold mb-2">Tus últimas compras</h2>
         <ul class="list-disc ml-6 text-gray-700">
@@ -30,6 +28,6 @@
             <li>Producto B - 1 ud - 08/06/2025</li>
         </ul>
     </div>
-    #}
+    
 </div>
 {% endblock %}
