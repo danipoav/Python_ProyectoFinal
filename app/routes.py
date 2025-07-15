@@ -7,6 +7,8 @@ from collections import defaultdict
 from flask import Blueprint
 from . import login_manager
 from .models import Usuario
+from datetime import datetime
+
 
 main = Blueprint('main', __name__)
 
@@ -250,3 +252,29 @@ def mis_ventas():
 
     return render_template('ventas.html', labels=labels, valores=valores)
 
+@main.route('/comprar/<int:producto_id>', methods=['POST'])
+@login_required
+def comprar_producto(producto_id):
+    producto = Producto.query.get_or_404(producto_id)
+
+    if producto.cantidad <= 0:
+        flash('❌ No hay stock disponible para este producto.', 'danger')
+        return redirect(url_for('main.catalogo'))
+
+    # Crear venta
+    venta = Venta(
+        usuario_id=current_user.id,
+        producto_id=producto.id,
+        cantidad=1,
+        precio_total=producto.precio,
+        fecha=datetime.utcnow()
+    )
+
+    # Restar stock
+    producto.cantidad -= 1
+
+    db.session.add(venta)
+    db.session.commit()
+
+    flash(f'✅ Has comprado "{producto.nombre}" correctamente.', 'success')
+    return redirect(url_for('main.catalogo'))
