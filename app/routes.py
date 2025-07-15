@@ -8,6 +8,7 @@ from flask import Blueprint
 from . import login_manager
 from .models import Usuario
 from datetime import datetime
+from flask import session
 
 
 main = Blueprint('main', __name__)
@@ -261,7 +262,6 @@ def comprar_producto(producto_id):
         flash('❌ No hay stock disponible para este producto.', 'danger')
         return redirect(url_for('main.catalogo'))
 
-    # Crear venta
     venta = Venta(
         usuario_id=current_user.id,
         producto_id=producto.id,
@@ -270,7 +270,6 @@ def comprar_producto(producto_id):
         fecha=datetime.utcnow()
     )
 
-    # Restar stock
     producto.cantidad -= 1
 
     db.session.add(venta)
@@ -278,3 +277,35 @@ def comprar_producto(producto_id):
 
     flash(f'✅ Has comprado "{producto.nombre}" correctamente.', 'success')
     return redirect(url_for('main.catalogo'))
+
+
+#Ruta para añadir productos al carrito
+@main.route('/añadir/<int:producto_id>', methods=['POST'])
+@login_required
+def añadir_carrito(producto_id):
+    producto = Producto.query.get_or_404(producto_id)
+    cantidad = int(request.form.get('cantidad',1))
+    
+    if cantidad > producto.cantidad:
+        flash('❌ No hay suficiente stock disponible.', 'danger')
+        return redirect(url_for('main.catalogo'))
+    
+    carrito = session.get('carrito',{})
+    if str(producto_id) in carrito:
+        carrito[str(producto_id)] += cantidad
+    else:
+        carrito[str(producto_id)] = cantidad
+        
+    session['carrito'] = carrito
+    flash(f'🛒 {producto.nombre} añadido al carrito.', 'success')
+    return redirect(url_for('main.catalogo'))
+
+#Ruta para ver lo que contiene el carrito
+@main.route('/carrito')
+@login_required
+def ver_carrito():
+    carrito = session.get('carrito',{})
+    productos = []
+    total = 0
+    
+    return render_template('carrito.html')
