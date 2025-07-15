@@ -15,9 +15,9 @@
 
     {% if p.cantidad > 0 %}
     <form method="POST" action="{{ url_for('main.comprar_producto', producto_id=p.id) }}" class="mt-3">
-      <button type="submit"
-        class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded">
-        🛍️ Comprar
+      <input type="number" name="cantidad" value="1" min="1" max="{{p.cantidad}}">
+      <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded">
+        ➕ Añadir al carrito
       </button>
     </form>
     {% else %}
