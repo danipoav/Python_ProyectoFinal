@@ -11,35 +11,44 @@
 <body class="bg-gray-100 text-gray-900 font-sans min-h-screen flex flex-col">
 
     <nav class="bg-white shadow-md px-6 py-4 flex justify-between items-center">
-        <a class="text-xl font-bold text-blue-600 cursor-pointer" href="{{ url_for('main.home')}}">📦 Gestión Suministros</a>
+        <a class="text-xl font-bold text-blue-600 cursor-pointer" href="{{ url_for('main.home')}}">📦 Gestión
+            Suministros</a>
         {% if current_user.is_authenticated %}
-        <ul class=" flex gap-5">
+        <div class="flex gap-3 flex-wrap">
             {% if current_user.rol == 'admin' %}
-            <li
-                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
-                INICIO</li>
-            <li
-                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
-                PRODUCTOS</li>
-            <li
-                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
-                PROVEDOORES</li>
-            <li
-                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
-                VENTAS</li>
+            <a href="{{ url_for('main.home') }}"
+                class="text-white bg-blue-600 py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition">
+                🏠 Inicio
+            </a>
+            <a href="{{ url_for('main.listar_productos') }}"
+                class="text-white bg-blue-600 py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition">
+                📦 Productos
+            </a>
+            <a href="{{ url_for('main.listar_proveedores') }}"
+                class="text-white bg-blue-600 py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition">
+                🏭 Proveedores
+            </a>
+            <a href="{{ url_for('main.estadisticas') }}"
+                class="text-white bg-blue-600 py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition">
+                📊 Ventas
+            </a>
             {% else %}
-            <li
-                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
-                INICIO</li>
-            <li
-                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
-                CATALOGO</li>
-            <li
-                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
-                VENTAS</li>
+            <a href="{{ url_for('main.home') }}"
+                class="text-white bg-green-600 py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition">
+                🏠 Inicio
+            </a>
+            <a href="{{ url_for('main.catalogo') }}"
+                class="text-white bg-green-600 py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition">
+                🛍️ Catálogo
+            </a>
+            <a href="{{ url_for('main.mis_ventas') }}"
+                class="text-white bg-green-600 py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition">
+                📈 Mis Compras
+            </a>
             {% endif %}
-        </ul>
+        </div>
         {% endif %}
+
         <div class="space-x-4">
             {% if current_user.is_authenticated %}
             <span class="text-gray-700">👤 {{ current_user.nombre }}</span>
