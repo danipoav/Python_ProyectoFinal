@@ -10,17 +10,43 @@
 
 <body class="bg-gray-100 text-gray-900 font-sans min-h-screen flex flex-col">
 
-    <!-- Navbar -->
     <nav class="bg-white shadow-md px-6 py-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold text-blue-600">📦 Gestión Suministros</h1>
-
+        <a class="text-xl font-bold text-blue-600 cursor-pointer" href="{{ url_for('main.home')}}">📦 Gestión Suministros</a>
+        {% if current_user.is_authenticated %}
+        <ul class=" flex gap-5">
+            {% if current_user.rol == 'admin' %}
+            <li
+                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
+                INICIO</li>
+            <li
+                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
+                PRODUCTOS</li>
+            <li
+                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
+                PROVEDOORES</li>
+            <li
+                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
+                VENTAS</li>
+            {% else %}
+            <li
+                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
+                INICIO</li>
+            <li
+                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
+                CATALOGO</li>
+            <li
+                class=" text-white bg-blue-500 py-2 px-5 rounded-lg font-bold cursor-pointer hover:bg-blue-600 transition-all">
+                VENTAS</li>
+            {% endif %}
+        </ul>
+        {% endif %}
         <div class="space-x-4">
             {% if current_user.is_authenticated %}
-                <span class="text-gray-700">👤 {{ current_user.nombre }}</span>
-                <a href="{{ url_for('main.logout') }}" class="text-red-500 hover:underline">Cerrar sesión</a>
+            <span class="text-gray-700">👤 {{ current_user.nombre }}</span>
+            <a href="{{ url_for('main.logout') }}" class="text-red-500 hover:underline">Cerrar sesión</a>
             {% else %}
-                <a href="{{ url_for('main.login') }}" class="text-blue-600 hover:underline">Login</a>
-                <a href="{{ url_for('main.register') }}" class="text-blue-600 hover:underline">Registro</a>
+            <a href="{{ url_for('main.login') }}" class="text-blue-600 hover:underline">Login</a>
+            <a href="{{ url_for('main.register') }}" class="text-blue-600 hover:underline">Registro</a>
             {% endif %}
         </div>
     </nav>
@@ -28,8 +54,8 @@
     <!-- Flash messages -->
     <div class="container mx-auto mt-4 px-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% for category, message in messages %}
-                <div class="mb-4 px-4 py-2 rounded text-white 
+        {% for category, message in messages %}
+        <div class="mb-4 px-4 py-2 rounded text-white 
                     {% if category == 'success' %}
                         bg-green-500
                     {% elif category == 'error' %}
@@ -40,9 +66,9 @@
                         bg-gray-600
                     {% endif %}
                 ">
-                    {{ message }}
-                </div>
-            {% endfor %}
+            {{ message }}
+        </div>
+        {% endfor %}
         {% endwith %}
     </div>
 
@@ -57,4 +83,5 @@
     </footer>
 
 </body>
+
 </html>
