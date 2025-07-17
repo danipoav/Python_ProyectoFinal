@@ -306,6 +306,14 @@ def añadir_carrito(producto_id):
 def ver_carrito():
     carrito = session.get('carrito',{})
     productos = []
-    total = 0
+    print(carrito.items())
+    for producto_id,cantidad in carrito.items():
+        prod = Producto.query.get(int(producto_id))
+        print(prod)
+        # productos.append({
+        #     'producto': prod,
+            
+        # })
+
     
     return render_template('carrito.html')
