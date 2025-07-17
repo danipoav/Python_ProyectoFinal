@@ -306,14 +306,31 @@ def añadir_carrito(producto_id):
 def ver_carrito():
     carrito = session.get('carrito',{})
     productos = []
+    total = 0
     print(carrito.items())
     for producto_id,cantidad in carrito.items():
         prod = Producto.query.get(int(producto_id))
         print(prod)
-        # productos.append({
-        #     'producto': prod,
-            
-        # })
+        productos.append({
+            'producto': prod,
+            'cantidad': cantidad,
+            'subtotal':prod.precio * cantidad
+        })
+        total += prod.precio * cantidad
 
-    
-    return render_template('carrito.html')
+    return render_template('carrito.html',productos = productos, total=total)
+
+#Ruta para eliminar items del carrito
+@main.route('/eliminar/<int:producto_id>',methods=['POST'])
+@login_required
+def eliminar_del_carrito(producto_id):
+    carrito = session.get('carrito',{})
+    producto = Producto.query.get_or_404(producto_id)
+    if str(producto_id) in carrito:
+        carrito.pop(str(producto_id))
+        session['carrito'] = carrito
+        flash(f'🗑️ {producto.nombre} eliminado correctamente del carrito','info')
+    else:
+        flash('⚠️ El producto no estaba en el carrito.', 'warning')
+        
+    return redirect(url_for('main.ver_carrito'))
