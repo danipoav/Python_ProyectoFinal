@@ -26,7 +26,7 @@ def home():
         else:
             ventas = Venta.query.filter_by(usuario_id = current_user.id).order_by(Venta.fecha.desc()).limit(3).all()
             print(ventas)
-            return render_template('homeCliente.html',ventas = ventas)
+            return render_template('cliente/homeCliente.html',ventas = ventas)
     return render_template('bienvenida.html')
 
 
@@ -86,7 +86,7 @@ def catalogo():
         return redirect(url_for('main.home'))
     
     productos = Producto.query.all()
-    return render_template('catalogo.html',productos=productos)
+    return render_template('cliente/catalogo.html',productos=productos)
 
 # Productos
 @main.route('/productos')
@@ -267,7 +267,7 @@ def mis_ventas():
     labels = list(ventas_por_dia.keys())
     valores = list(ventas_por_dia.values())
 
-    return render_template('estadisticas.html', labels=labels, valores=valores)
+    return render_template('cliente/estadisticas.html', labels=labels, valores=valores)
 
 #Ruta para añadir productos al carrito
 @main.route('/añadir/<int:producto_id>', methods=['POST'])
@@ -306,7 +306,7 @@ def ver_carrito():
         })
         total += prod.precio * cantidad
 
-    return render_template('carrito.html',productos = productos, total=total)
+    return render_template('cliente/carrito.html',productos = productos, total=total)
 
 #Ruta para eliminar items del carrito
 @main.route('/eliminar/<int:producto_id>',methods=['POST'])
