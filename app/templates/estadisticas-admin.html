@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Estadísticas{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-2xl">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">📊 Comparativa de Ventas y Beneficios por Proveedor</h2>
+
+    <canvas id="graficaProveedores" height="120"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const datos = {{ datos | tojson }};
+
+    const labels = datos.map(d => d.proveedor);
+    const ventas = datos.map(d => d.ventas);
+    const beneficios = datos.map(d => d.beneficio);
+
+    const ctx = document.getElementById('graficaProveedores').getContext('2d');
+    const grafica = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Ventas (Unidades)',
+                    data: ventas,
+                    backgroundColor: 'rgba(59, 130, 246, 0.7)', // Azul
+                    borderRadius: 8
+                },
+                {
+                    label: 'Beneficios (€)',
+                    data: beneficios,
+                    backgroundColor: 'rgba(34, 197, 94, 0.7)', // Verde
+                    borderRadius: 8
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value % 1 === 0 ? value : '';
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

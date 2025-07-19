@@ -32,7 +32,7 @@
             </a>
             <a href="{{ url_for('main.estadisticas') }}"
                 class="text-white bg-blue-600 py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition">
-                📊 Ventas
+                📊 Estadísticas
             </a>
             {% else %}
             <a href="{{ url_for('main.home') }}"
@@ -43,9 +43,9 @@
                 class="text-white bg-green-600 py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition">
                 🛍️ Catálogo
             </a>
-            <a href="{{ url_for('main.estadisticas') }}"
+            <a href="{{ url_for('main.mis_ventas') }}"
                 class="text-white bg-green-600 py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition">
-                📈 Estadísticas
+                📈 Ventas
             </a>
             {% endif %}
         </div>
@@ -53,6 +53,12 @@
 
         <div class="space-x-4">
             {% if current_user.is_authenticated %}
+            {% if current_user.rol == 'cliente' %}
+            <a href="{{ url_for('main.ver_carrito') }}"
+                class=" bg-blue-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-blue-700">
+                🛒 Ver carrito
+            </a>
+            {% endif %}
             <span class="text-gray-700">👤 {{ current_user.nombre }}</span>
             <a href="{{ url_for('main.logout') }}" class="text-red-500 hover:underline">Cerrar sesión</a>
             {% else %}

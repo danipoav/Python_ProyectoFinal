@@ -227,6 +227,36 @@ def eliminar_proveedor(id):
 @main.route('/estadisticas')
 @login_required
 def estadisticas():
+    if current_user.rol != 'admin':
+        flash('Acceso no autorizado', 'danger')
+        return redirect(url_for('main.home'))
+
+    proveedores = Proveedor.query.all()
+    data = []
+
+    for proveedor in proveedores:
+        total_vendido = 0
+        beneficio_total = 0
+
+        for producto in proveedor.productos:
+            ventas = Venta.query.filter_by(producto_id=producto.id).all()
+            for venta in ventas:
+                total_vendido += venta.cantidad
+                beneficio = (producto.precio - proveedor.precio_base) * venta.cantidad
+                beneficio_total += beneficio
+
+        data.append({
+            'proveedor': proveedor.nombre_empresa,
+            'ventas': total_vendido,
+            'beneficio': round(beneficio_total, 2)
+        })
+
+    return render_template('estadisticas-admin.html', datos=data)
+
+# GraficaComprasCliente
+@main.route('/mis-ventas')
+@login_required
+def mis_ventas():
     ventas = Venta.query.all()
 
     ventas_por_dia = {}
@@ -238,22 +268,6 @@ def estadisticas():
     valores = list(ventas_por_dia.values())
 
     return render_template('estadisticas.html', labels=labels, valores=valores)
-
-# GraficaComprasCliente
-@main.route('/mis-ventas')
-@login_required
-def mis_ventas():
-    ventas = Venta.query.filter_by(usuario_id=current_user.id).all()
-
-    ventas_por_fecha = defaultdict(float)
-    for v in ventas:
-        fecha_str = v.fecha.strftime('%Y-%m-%d')
-        ventas_por_fecha[fecha_str] += v.precio_total
-
-    labels = sorted(ventas_por_fecha.keys())
-    valores = [ventas_por_fecha[fecha] for fecha in labels]
-
-    return render_template('ventas.html', labels=labels, valores=valores)
 
 #Ruta para añadir productos al carrito
 @main.route('/añadir/<int:producto_id>', methods=['POST'])
@@ -351,5 +365,5 @@ def confirmar_compra():
     
     session['carrito'] = {}
     flash('✅ Compra realizada con éxito.', 'success')
-    return redirect(url_for('main.estadisticas'))
+    return redirect(url_for('main.mis_ventas'))
     
