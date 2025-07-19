@@ -31,7 +31,6 @@ with app.app_context():
         db.session.add_all([proveedor1, proveedor2])
         db.session.commit()
 
-        # Crear productos asociados
         producto1 = Producto(
             nombre="Monitor 24'' FullHD",
             descripcion="Monitor IPS 24 pulgadas",
