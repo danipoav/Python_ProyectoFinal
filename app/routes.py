@@ -24,7 +24,9 @@ def home():
         if current_user.rol == 'admin':
             return render_template('home.html')
         else:
-            return render_template('homeCliente.html')
+            ventas = Venta.query.filter_by(usuario_id = current_user.id).order_by(Venta.fecha.desc()).limit(3).all()
+            print(ventas)
+            return render_template('homeCliente.html',ventas = ventas)
     return render_template('bienvenida.html')
 
 
@@ -252,32 +254,6 @@ def mis_ventas():
     valores = [ventas_por_fecha[fecha] for fecha in labels]
 
     return render_template('ventas.html', labels=labels, valores=valores)
-
-@main.route('/comprar/<int:producto_id>', methods=['POST'])
-@login_required
-def comprar_producto(producto_id):
-    producto = Producto.query.get_or_404(producto_id)
-
-    if producto.cantidad <= 0:
-        flash('❌ No hay stock disponible para este producto.', 'danger')
-        return redirect(url_for('main.catalogo'))
-
-    venta = Venta(
-        usuario_id=current_user.id,
-        producto_id=producto.id,
-        cantidad=1,
-        precio_total=producto.precio,
-        fecha= datetime.now(timezone.utc)
-    )
-
-    producto.cantidad -= 1
-
-    db.session.add(venta)
-    db.session.commit()
-
-    flash(f'✅ Has comprado "{producto.nombre}" correctamente.', 'success')
-    return redirect(url_for('main.catalogo'))
-
 
 #Ruta para añadir productos al carrito
 @main.route('/añadir/<int:producto_id>', methods=['POST'])

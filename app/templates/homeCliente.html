@@ -13,7 +13,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <a href="{{ url_for('main.catalogo') }}" class="p-6 bg-blue-100 hover:bg-blue-200 text-blue-800 font-semibold rounded-xl transition">
-            🛒 Ver Catálogo de Productos
+            🛍️ Ver Catálogo de Productos
         </a>
 
         <a href="{{ url_for('main.estadisticas') }}" class="p-6 bg-green-100 hover:bg-green-200 text-green-800 font-semibold rounded-xl transition">
@@ -21,12 +21,22 @@
         </a>
     </div>
     
-    <div class="mt-8">
-        <h2 class="text-xl font-bold mb-2">Tus últimas compras</h2>
-        <ul class="list-disc ml-6 text-gray-700">
-            <li>Producto A - 2 uds - 12/06/2025</li>
-            <li>Producto B - 1 ud - 08/06/2025</li>
-        </ul>
+    <div class="mt-10">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">🧾 Tus últimas compras</h2>
+        
+        {% if ventas %}
+            <div class="space-y-4">
+                {% for venta in ventas %}
+                <div class="bg-gray-100 p-4 rounded-lg">
+                    <p class="text-gray-700 font-semibold">
+                        🗓️ {{ venta.fecha.strftime('%d/%m/%Y') }} – {{ venta.producto.nombre }} x {{ venta.cantidad }} – {{ venta.precio_total }} €
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500 italic">Aún no has realizado ninguna compra.</p>
+        {% endif %}
     </div>
     
 </div>
