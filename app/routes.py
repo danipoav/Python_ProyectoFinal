@@ -7,7 +7,7 @@ from collections import defaultdict
 from flask import Blueprint
 from . import login_manager
 from .models import Usuario
-from datetime import datetime
+from datetime import datetime,timezone
 from flask import session
 
 
@@ -267,7 +267,7 @@ def comprar_producto(producto_id):
         producto_id=producto.id,
         cantidad=1,
         precio_total=producto.precio,
-        fecha=datetime.utcnow()
+        fecha= datetime.now(timezone.utc)
     )
 
     producto.cantidad -= 1
@@ -307,10 +307,8 @@ def ver_carrito():
     carrito = session.get('carrito',{})
     productos = []
     total = 0
-    print(carrito.items())
     for producto_id,cantidad in carrito.items():
         prod = Producto.query.get(int(producto_id))
-        print(prod)
         productos.append({
             'producto': prod,
             'cantidad': cantidad,
@@ -334,3 +332,48 @@ def eliminar_del_carrito(producto_id):
         flash('⚠️ El producto no estaba en el carrito.', 'warning')
         
     return redirect(url_for('main.ver_carrito'))
+
+#Ruta para confirmar la compra
+@main.route('/confirmar',methods=['POST'])
+@login_required
+def confirmar_compra():
+    carrito = session.get('carrito',{})
+    
+    if not carrito:
+        flash('🛒 Tu carrito está vacío.','warning')
+        return redirect(url_for('main.ver_carrito'))
+    
+    productos = []
+    total = 0
+    
+    for producto_id, cant in carrito.items():
+        producto = Producto.query.get(int(producto_id))
+        cantidad = cant | 1
+        
+        if not producto:
+            flash(f'❌ Producto con ID {producto_id} no encontrado.','danger')
+            return redirect(url_for('main.ver_carrito'))
+        if cantidad > producto.cantidad:
+            flash(f'⚠️ No hay suficiente stock para {producto.nombre}.', 'warning')
+            return redirect(url_for('main.ver_carrito'))
+        
+        productos.append((producto,cantidad))
+        total += producto.precio * cantidad
+        
+    for producto,cantidad in productos:
+        producto.cantidad -= cantidad
+        db.session.add(producto)
+        venta = Venta(
+            producto_id = producto_id,
+            usuario_id = current_user.id,
+            cantidad = cantidad,
+            fecha = datetime.now(timezone.utc),
+            precio_total = producto.precio * cantidad
+        )
+        db.session.add(venta)
+    db.session.commit()
+    
+    session['carrito'] = {}
+    flash('✅ Compra realizada con éxito.', 'success')
+    return redirect(url_for('main.estadisticas'))
+    
